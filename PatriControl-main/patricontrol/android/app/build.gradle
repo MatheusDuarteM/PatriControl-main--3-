@@ -1,0 +1,87 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.patricontrol"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId = "com.example.patricontrol"
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    // ###############################################################
+    // ########### ESTE BLOCO DEVE SER REMOVIDO OU COMENTADO ###########
+    // ###############################################################
+    /*
+    signingConfigs {
+        release {
+            // Carrega as propriedades de assinatura do key.properties
+            // Verifique se o caminho para key.properties está correto.
+            // Assumimos que key.properties está na pasta 'android/' (fora de 'app/')
+            def properties = new Properties()
+            def keystorePropertiesFile = rootProject.file('key.properties')
+            if (keystorePropertiesFile.exists()) {
+                properties.load(new FileInputStream(keystorePropertiesFile))
+            } else {
+                // Pode adicionar um log ou throw exception se o arquivo não for encontrado
+                println("WARNING: key.properties not found in root project.")
+            }
+
+            if (properties.containsKey('storeFile') && properties.containsKey('storePassword') &&
+                properties.containsKey('keyAlias') && properties.containsKey('keyPassword')) {
+                storeFile file(properties['storeFile'])
+                storePassword properties['storePassword']
+                keyAlias properties['keyAlias']
+                keyPassword properties['keyPassword']
+            } else {
+                // Pode adicionar um log ou throw exception se as propriedades estiverem faltando
+                println("WARNING: Signing properties incomplete in key.properties.")
+            }
+        }
+    }
+    */
+    // ###############################################################
+    // ########### FIM DO BLOCO A SER REMOVIDO OU COMENTADO ##########
+    // ###############################################################
+
+    buildTypes {
+        release {
+            // ###########################################################
+            // ########### ESTA É A LINHA QUE DEVE SER ALTERADA ##########
+            // ###########################################################
+            signingConfig signingConfigs.debug // <--- Mude de 'signingConfigs.release' para 'signingConfigs.debug'
+            // ###########################################################
+
+            // Você também pode adicionar otimizações aqui, como minify, proguard, etc.
+            // (Mantenha estas linhas se precisar delas, ou remova/comente se estiverem causando problemas
+            // e você não precise de otimização no momento)
+            // minifyEnabled true
+            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            // Configuração para builds de debug - já deve usar a chave de debug padrão
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
