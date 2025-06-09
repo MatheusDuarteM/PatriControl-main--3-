@@ -12,19 +12,18 @@ import 'package:patricontrol/providers/fornecedor_list_provider.dart';
 import 'package:patricontrol/providers/marca_list_provider.dart';
 import 'package:patricontrol/providers/setor_list_provider.dart';
 import 'package:patricontrol/widgets/movimentacao/movimentacao_cadastro_page.dart';
+// Removido o import de 'widgets' pois a página de cadastro deve estar em 'pages'
+// import 'package:patricontrol/widgets/movimentacao/movimentacao_cadastro_page.dart';
 import 'package:provider/provider.dart';
-
-// --- PROVIDERS GLOBAIS ---
 
 // --- SERVIÇOS ---
 import 'package:patricontrol/services/modelo_service.dart';
 import 'package:patricontrol/services/usuario_service.dart';
 import 'package:patricontrol/services/patrimonio_service.dart';
-// import 'package:patricontrol/services/movimentacao_service.dart'; // Se MovimentacaoService for usado diretamente no provider
 
 // --- CONTROLLERS ---
 import 'package:patricontrol/controller/usuario_controller.dart';
-import 'package:patricontrol/controller/movimentacao_controller.dart'; // <--- NOVO IMPORT: MOVIMENTACAO CONTROLLER
+import 'package:patricontrol/controller/movimentacao_controller.dart';
 
 // --- PROVIDERS DE LISTA ---
 import 'package:patricontrol/providers/modelo_list_provider.dart';
@@ -32,8 +31,9 @@ import 'package:patricontrol/providers/usuario_list_provider.dart';
 import 'package:patricontrol/providers/patrimonio_list_provider.dart';
 
 // --- PÁGINAS DE MOVIMENTAÇÃO ---
-import 'package:patricontrol/pages/movimentacao/movimentacao_list_page.dart'; // <--- NOVO IMPORT
-//import 'package:patricontrol/pages/movimentacao/movimentacao_cadastro_page.dart'; // <--- NOVO IMPORT
+import 'package:patricontrol/pages/movimentacao/movimentacao_list_page.dart';
+// Certifique-se que este caminho está correto e o arquivo existe lá
+//import 'package:patricontrol/pages/movimentacao/movimentacao_cadastro_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,43 +46,31 @@ class MyApp extends StatelessWidget {
   Widget _buildInitialScreen(StatusAutenticacao status) {
     switch (status) {
       case StatusAutenticacao.inicializando:
-        // Mostra um loader enquanto o AuthProvider verifica o status
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       case StatusAutenticacao.autenticado:
-        return DashboardScreen(); // Ou sua tela inicial após login
+        return DashboardScreen(); // Esta tela DEVE ter o Drawer
       case StatusAutenticacao.naoAutenticado:
       case StatusAutenticacao.falhaAutenticacao:
       default:
-        // Caso contrário, mostra a LoginPage
         return const LoginPage();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // ***** A ESTRUTURA CORRETA VOLTA AQUI *****
     return MultiProvider(
       providers: [
-        // --- SERVIÇOS ---
-        // Provider de UsuarioService DEVE VIR ANTES do AuthProvider se este depender dele
         Provider<UsuarioService>(create: (_) => UsuarioService()),
         Provider<ModeloService>(create: (_) => ModeloService()),
         Provider<PatrimonioService>(create: (_) => PatrimonioService()),
-        // Se o MovimentacaoService fosse usado em múltiplos controllers ou precisasse ser injetado
-        // você poderia adicioná-lo aqui. Por enquanto, ele é instanciado dentro do MovimentacaoController.
-        // Provider<MovimentacaoService>(create: (_) => MovimentacaoService()),
-
-        // --- AUTH PROVIDER ---
-        // É crucial que o AuthProvider seja criado e que verifique o login salvo
         ChangeNotifierProvider<AuthProvider>(
           create:
-              (context) =>
-                  AuthProvider(usuarioService: context.read<UsuarioService>())
-                    ..verificarLoginSalvo(), // <-- CHAMADA IMPORTANTE!
+              (context) => AuthProvider(
+                usuarioService: context.read<UsuarioService>(),
+              )..verificarLoginSalvo(), // Ou ..simularLoginParaTeste() se quiser pular o login
         ),
-
-        // --- CONTROLLERS ---
         ChangeNotifierProvider<ModeloController>(
-          // Mantendo se ainda usado para formulários
           create: (context) => ModeloController(),
         ),
         ChangeNotifierProvider<UsuarioController>(
@@ -101,12 +89,8 @@ class MyApp extends StatelessWidget {
           create: (context) => PatrimonioController(),
         ),
         ChangeNotifierProvider<MovimentacaoController>(
-          // <--- NOVO PROVIDER: MOVIMENTACAO CONTROLLER
           create: (context) => MovimentacaoController(),
         ),
-
-        // --- PROVIDERS DE LISTA ---
-        // (Se ModeloListProvider ainda for usado, mantenha-o)
         ChangeNotifierProvider<ModeloListProvider>(
           create: (context) => ModeloListProvider(),
         ),
@@ -151,24 +135,19 @@ class MyApp extends StatelessWidget {
             ],
             supportedLocales: const [Locale('pt', 'BR'), Locale('en', 'US')],
             locale: const Locale('pt', 'BR'),
-            // Define a rota inicial baseada na autenticação.
-            // Se o DashboardScreen for a tela principal após o login e contiver
-            // a navegação para a lista de movimentações, não é necessário mudar a home aqui.
-            // A rota para '/movimentacoes' será usada para navegação interna.
             home: _buildInitialScreen(authProvider.status),
             routes: {
               '/login': (context) => const LoginPage(),
               '/dashboard': (context) => DashboardScreen(),
-              // --- NOVAS ROTAS PARA MOVIMENTAÇÃO ---
               MovimentacaoListPage.routeName:
                   (context) => const MovimentacaoListPage(),
               MovimentacaoCadastroPage.routeName:
                   (context) => const MovimentacaoCadastroPage(),
-              // Suas outras rotas existentes...
             },
           );
         },
       ),
     );
+    // *******************************************
   }
 }

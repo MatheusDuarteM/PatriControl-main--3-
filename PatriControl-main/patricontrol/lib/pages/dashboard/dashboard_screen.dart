@@ -1,133 +1,152 @@
 import 'package:flutter/material.dart';
-import 'package:patricontrol/pages/fornecedor/listaFornecedor.dart';
-import 'package:patricontrol/pages/marca/listaMarca.dart';
-import 'package:patricontrol/pages/modelo/lista_modelos_page.dart';
-import 'package:patricontrol/pages/patrimonio/listaPatrimonio.dart';
-import 'package:patricontrol/pages/setor/listaSetor.dart';
-import 'package:patricontrol/pages/usuario/lista_usuarios_page.dart';
+import 'package:patricontrol/pages/movimentacao/movimentacao_list_page.dart'; // Importe a página de listagem
+// Importe outras páginas que você vai navegar a partir do drawer
+// import 'package:patricontrol/providers/authProvider.dart'; // Se precisar para logout ou nome do usuário
+// import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
+  static const routeName = '/dashboard'; // Se você definir rotas assim
+
   @override
   Widget build(BuildContext context) {
+    // Exemplo de como pegar o nome do usuário se AuthProvider estiver disponível
+    // final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    // final nomeUsuario = authProvider.usuarioLogado?.nomeUsuario ?? 'Usuário';
+    // final privilegioUsuario = authProvider.usuarioLogado?.tipoUsuario ?? 'Privilégio';
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard Teste'),
-        backgroundColor: Colors.grey[300], // Cinza claro
-        iconTheme: IconThemeData(color: Colors.black), // Ícone do Drawer preto
+        title: const Text('Dashboard'), // Ou o título da tela atual
       ),
       drawer: Drawer(
+        // AQUI VOCÊ COLOCA O CÓDIGO DO SEU DRAWER
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-                child: Container(
-              margin: const EdgeInsets.only(bottom: 10.0),
-              child: Image.asset(
-                'assets/images/LogoHeader.png',
-                width: 304,
-                fit: BoxFit.fitHeight
+              decoration: BoxDecoration(color: Colors.blueGrey[700]),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.account_circle, size: 60, color: Colors.white),
+                  SizedBox(height: 8),
+                  Text(
+                    'Usuário', // Substitua por: nomeUsuario,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  Text(
+                    'Privilégio', // Substitua por: privilegioUsuario,
+                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+                ],
               ),
-            )),
-            ListTile(
-              leading: Icon(Icons.all_inbox), // Ícone para Marcas
-              title: Text('Patrimonios'),
-              onTap: () {
-                // Navegar para a tela de Cadastro de Marcas
-                Navigator.pop(context); // Fecha o Drawer
-                // Adicione aqui a sua lógica de navegação para a tela de Cadastro de Marcas
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ListaPatrimonioPage()) // Substitua Placeholder pela sua tela real
-                    );
-              },
             ),
             ListTile(
-              leading: Icon(Icons.crop_square_outlined), // Ícone para Marcas
-              title: Text('Cadastro de Modelos'),
+              leading: Icon(Icons.add_box_outlined),
+              title: const Text('Cadastro de Patrimônio'),
               onTap: () {
-                // Navegar para a tela de Cadastro de Marcas
-                Navigator.pop(context); // Fecha o Drawer
-                // Adicione aqui a sua lógica de navegação para a tela de Cadastro de Marcas
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ListaModelosPage()) // Substitua Placeholder pela sua tela real
-                    );
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.business), // Ícone para Fornecedor
-              title: Text('Cadastro de Fornecedor'),
-              onTap: () {
-                // Navegar para a tela de Cadastro de Fornecedor
-                Navigator.pop(context); // Fecha o Drawer
-                // Adicione aqui a sua lógica de navegação para a tela de Cadastro de Fornecedor
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          listaFornecedor()), // Substitua Placeholder pela sua tela real
+                Navigator.of(context).pop();
+                // Exemplo: Navigator.of(context).pushNamed('/cadastro-patrimonio');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Navegar para Cadastro de Patrimônio'),
+                  ),
                 );
               },
             ),
             ListTile(
-              leading: Icon(Icons.label), // Ícone para Marcas
-              title: Text('Cadastro de Marcas'),
+              leading: Icon(Icons.search_outlined),
+              title: const Text('Consulta de Patrimônio'),
               onTap: () {
-                // Navegar para a tela de Cadastro de Marcas
-                Navigator.pop(context); // Fecha o Drawer
-                // Adicione aqui a sua lógica de navegação para a tela de Cadastro de Marcas
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ListaMarcaPage()) // Substitua Placeholder pela sua tela real
-                    );
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Navegar para Consulta de Patrimônio'),
+                  ),
+                );
               },
             ),
             ListTile(
-              leading: Icon(Icons.door_back_door), // Ícone para Marcas
-              title: Text('Cadastro de Setores'),
+              leading: Icon(Icons.handshake_outlined),
+              title: const Text('Cadastro de Fornecedor'),
               onTap: () {
-                // Navegar para a tela de Cadastro de Marcas
-                Navigator.pop(context); // Fecha o Drawer
-                // Adicione aqui a sua lógica de navegação para a tela de Cadastro de Marcas
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            listaSetor()) // Substitua Placeholder pela sua tela real
-                    );
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Navegar para Cadastro de Fornecedor'),
+                  ),
+                );
               },
             ),
             ListTile(
-              leading: Icon(Icons.person), // Ícone para Marcas
-              title: Text('Cadastro de Usuarios'),
+              leading: Icon(Icons.sync_alt_outlined),
+              title: const Text('Movimentações'),
+              tileColor:
+                  ModalRoute.of(context)?.settings.name ==
+                          MovimentacaoListPage.routeName
+                      ? Colors.blueGrey[100]
+                      : null,
               onTap: () {
-                // Navegar para a tela de Cadastro de Marcas
-                Navigator.pop(context); // Fecha o Drawer
-                // Adicione aqui a sua lógica de navegação para a tela de Cadastro de Marcas
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            listaUsuario()) // Substitua Placeholder pela sua tela real
-                    );
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(MovimentacaoListPage.routeName);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.bar_chart_outlined),
+              title: const Text('Relatórios'),
+              onTap: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Navegar para Relatórios')),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person_add_alt_1_outlined),
+              title: const Text('Cadastro de Usuários'),
+              onTap: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Navegar para Cadastro de Usuários'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.door_front_door_outlined),
+              title: const Text('Cadastro de Setor'),
+              onTap: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Navegar para Cadastro de Setor'),
+                  ),
+                );
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: const Text('Sair'),
+              onTap: () {
+                Navigator.of(context).pop();
+                // Lógica de logout
+                // final auth = Provider.of<AuthProvider>(context, listen: false);
+                // auth.logout();
+                // Navigator.of(context).pushReplacementNamed('/login');
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Ação de Sair')));
               },
             ),
           ],
         ),
       ),
-      body: Center(
-        child: Text(
-          'Tela Principal do Dashboard',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
+      body: const Center(child: Text('Conteúdo do Dashboard Aqui')),
     );
   }
 }
